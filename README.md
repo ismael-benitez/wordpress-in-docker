@@ -1,91 +1,60 @@
-# [Bedrock](https://roots.io/bedrock/)
-[![Packagist](https://img.shields.io/packagist/v/roots/bedrock.svg?style=flat-square)](https://packagist.org/packages/roots/bedrock)
-[![Build Status](https://img.shields.io/travis/roots/bedrock.svg?style=flat-square)](https://travis-ci.org/roots/bedrock)
+# WordPress in Docker
 
-Bedrock is a modern WordPress stack that helps you get started with the best development tools and project structure.
+This setup helps you get started with WordPress development with Docker as local environment.
 
-Much of the philosophy behind Bedrock is inspired by the [Twelve-Factor App](http://12factor.net/) methodology including the [WordPress specific version](https://roots.io/twelve-factor-wordpress/).
+*WordPress in Docker* uses Bedrock as moderm boilerplate of WordPress. [Bedrock](https://roots.io/bedrock/) is a modern WordPress stack that helps you get started with the best development tools and project structure.
 
-## Features
-
-* Better folder structure
-* Dependency management with [Composer](http://getcomposer.org)
-* Easy WordPress configuration with environment specific files
-* Environment variables with [Dotenv](https://github.com/vlucas/phpdotenv)
-* Autoloader for mu-plugins (use regular plugins as mu-plugins)
-* Enhanced security (separated web root and secure passwords with [wp-password-bcrypt](https://github.com/roots/wp-password-bcrypt))
-
-Use [Trellis](https://github.com/roots/trellis) for additional features:
-
-* Easy development environments with [Vagrant](http://www.vagrantup.com/)
-* Easy server provisioning with [Ansible](http://www.ansible.com/) (Ubuntu 16.04, PHP 7.1, MariaDB)
-* One-command deploys
-
-See a complete working example in the [roots-example-project.com repo](https://github.com/roots/roots-example-project.com).
+[Docker](https://docs.docker.com/get-started/) is the most popular container solutions. It is easy to learn, light and an enough documented project.
 
 ## Requirements
 
-* PHP >= 5.6
-* Composer - [Install](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-osx)
+* Docker 1.13.0+ [Install](https://docs.docker.com/engine/installation/)
+* Docker Compose 1.10+ [Install](https://docs.docker.com/compose/install/)
 
 ## Installation
 
 1. Create a new project in a new folder for your project:
 
-  `composer create-project roots/bedrock your-project-folder-name`
+  `mkdir your-project-folder-name`
 
-2. Update environment variables in `.env`  file:
-  * `DB_NAME` - Database name
-  * `DB_USER` - Database user
-  * `DB_PASSWORD` - Database password
-  * `DB_HOST` - Database host
-  * `WP_ENV` - Set to environment (`development`, `staging`, `production`)
-  * `WP_HOME` - Full URL to WordPress home (http://example.com)
-  * `WP_SITEURL` - Full URL to WordPress including subdirectory (http://example.com/wp)
-  * `AUTH_KEY`, `SECURE_AUTH_KEY`, `LOGGED_IN_KEY`, `NONCE_KEY`, `AUTH_SALT`, `SECURE_AUTH_SALT`, `LOGGED_IN_SALT`, `NONCE_SALT`
+2. Init a new repository:
 
-  If you want to automatically generate the security keys (assuming you have wp-cli installed locally) you can use the very handy [wp-cli-dotenv-command][wp-cli-dotenv]:
+  `git init your-project-folder-name`
 
-      wp package install aaemnnosttv/wp-cli-dotenv-command
+3. Copy this repository into the new one:
 
-      wp dotenv salts regenerate
+  `cd your-project-folder-name`
+  `git pull git@github.com:ismael-benitez/wordpress-in-docker.git master`
+
+4. Copy the docker-compose.yml to the root:
+
+  `cp docker/docker-compose.yml .`
+
+5. Start the containers:
+
+  `docker-compose up -d`
+
+6. Create your local environment variables:
+
+  `cp .env.example .env`
+
+7. Install the dependencies:
+
+  `docker exec -it apache composer install`
+  
+8. Generate the security keys:
+
+  `docker exec -it apache vendor/bin/wp --allow-root dotenv salts regenerate`
 
   Or, you can cut and paste from the [Roots WordPress Salt Generator][roots-wp-salt].
 
-3. Add theme(s) in `web/app/themes` as you would for a normal WordPress site.
+9. Add theme(s) in `web/app/themes` as you would for a normal WordPress site.
 
-4. Set your site vhost document root to `/path/to/site/web/` (`/path/to/site/current/web/` if using deploys)
-
-5. Access WP admin at `http://example.com/wp/wp-admin`
-
-## Deploys
-
-There are two methods to deploy Bedrock sites out of the box:
-
-* [Trellis](https://github.com/roots/trellis)
-* [bedrock-capistrano](https://github.com/roots/bedrock-capistrano)
-
-Any other deployment method can be used as well with one requirement:
-
-`composer install` must be run as part of the deploy process.
+10. Access WP admin at `http://localhost:8080/wp/wp-admin`
 
 ## Documentation
 
 Bedrock documentation is available at [https://roots.io/bedrock/docs/](https://roots.io/bedrock/docs/).
 
-## Contributing
+Docker documentation is available at [https://docs.docker.com/](https://docs.docker.com/).
 
-Contributions are welcome from everyone. We have [contributing guidelines](https://github.com/roots/guidelines/blob/master/CONTRIBUTING.md) to help you get started.
-
-## Community
-
-Keep track of development and community news.
-
-* Participate on the [Roots Discourse](https://discourse.roots.io/)
-* Follow [@rootswp on Twitter](https://twitter.com/rootswp)
-* Read and subscribe to the [Roots Blog](https://roots.io/blog/)
-* Subscribe to the [Roots Newsletter](https://roots.io/subscribe/)
-* Listen to the [Roots Radio podcast](https://roots.io/podcast/)
-
-[roots-wp-salt]:https://roots.io/salts.html
-[wp-cli-dotenv]:https://github.com/aaemnnosttv/wp-cli-dotenv-command
