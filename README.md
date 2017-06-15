@@ -46,7 +46,7 @@ This setup helps you get started with WordPress development with Docker as local
 
   `docker exec -it apache vendor/bin/wp --allow-root dotenv salts regenerate`
 
-  Or, you can cut and paste from the [Roots WordPress Salt Generator][roots-wp-salt].
+  Or, you can cut and paste from the [Roots WordPress Salt Generator](https://roots.io/salts.html).
 
 9. Add theme(s) in `web/app/themes` as you would for a normal WordPress site.
 
