@@ -19,7 +19,9 @@ RUN set -ex; \
 	\
 	docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
 	docker-php-ext-install gd mysqli opcache; \
-	curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer --version=${COMPOSER_VERSION};
+	curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer --version=${COMPOSER_VERSION}; \
+    sed -i -e 's/<Directory \/var\/www\/>/<Directory \/app\/>/g' /etc/apache2/apache2.conf
 
 RUN a2enmod rewrite expires
 
+WORKDIR /app
