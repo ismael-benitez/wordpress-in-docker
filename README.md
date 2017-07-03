@@ -26,7 +26,7 @@ This setup helps you get started with WordPress development with Docker as local
   `cd your-project-folder-name`
   `git pull git@github.com:ismael-benitez/wordpress-in-docker.git master`
 
-4. Copy the docker-compose.yml to the root and personalize the WordPress installation:
+4. Copy the `docker-compose.yml` to the root and personalize the WordPress installation:
 
   ```bash
   $ cp docker/docker-compose.yml .
@@ -48,6 +48,9 @@ If you change the default public port `8080` to another, you must to edit the UR
     environment:
         URL: http://localhost:8000
 ```
+
+If you need to initialize the database with a dump, save it in `docker/mysql/data` with `.sh` or `.sql` or `.sql.gz` 
+format before doing the next step.
 
 5. Start your containerized local environment:
 

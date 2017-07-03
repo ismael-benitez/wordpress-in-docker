@@ -6,6 +6,7 @@ services:
     container_name: mysql
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./docker/mysql/data:/docker-entrypoint-initdb.d
     environment:
       MYSQL_ROOT_PASSWORD: ro.ot+
       MYSQL_DATABASE: wordpress
