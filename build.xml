@@ -52,7 +52,7 @@
         </exec>
     </target>
 
-    <target name="new" depends="installvendors, setting, waitfor, initwp, generatesalts" description="Initial set up for local development.">
+    <target name="up" depends="installvendors, setting, waitfor, initwp, generatesalts" description="Initial set up for local development.">
         <echo message="Congratulations! Now you can access to the admin: ${env.URL}/wp/wp-admin/"/>
     </target>
 </project>

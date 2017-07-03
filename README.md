@@ -54,7 +54,12 @@ format before doing the next step.
 
 5. Start your containerized local environment:
 
-  `docker-compose up -d`
+```bash
+$ docker-compose up -d
+$ docker exec -it apache ant up
+```
+
+Wait for about 2 minutes! :)
 
 6. Add theme(s) in `web/app/themes` as you would for a normal WordPress site.
 
