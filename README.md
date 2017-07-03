@@ -23,8 +23,10 @@ This setup helps you get started with WordPress development with Docker as local
 
 3. Copy this repository into the new one:
 
-  `cd your-project-folder-name`
-  `git pull git@github.com:ismael-benitez/wordpress-in-docker.git master`
+```bash
+$ cd your-project-folder-name
+$ git pull https://github.com/ismael-benitez/wordpress-in-docker.git master
+```
 
 4. Copy the `docker-compose.yml` to the root and personalize the WordPress installation:
 
