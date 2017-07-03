@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="WID" default="install">
+    <property name="workspace" value="/app"/>
+    <property name="vendordir" value="${workspace}/vendor"/>
+    <property name="bindir" value="${vendordir}/bin"/>
+    <property name="wpcli" value="${bindir}/wp"/>
+    <property name="composer" value="/usr/bin/composer"/>
+    <property environment="env" />
+
+    <target name="installvendors" description="Install vendors.">
+        <exec executable="php">
+            <arg value="${composer}"/>
+            <arg value="install"/>
+        </exec>
+    </target>
+
+    <target name="setting" description="Setting WordPress.">
+        <exec executable="envsubst">
+            <redirector input=".env.example" output=".env"/>
+        </exec>
+        <echo message="Created .env file with config parameters."/>
+    </target>
+
+    <target name="waitfor" description="wait for mysql socket">
+        <waitfor>
+            <socket server="mysql" port="3306"/>
+        </waitfor>
+        <echo message="Found mysql server."/>
+    </target>
+
+    <target name="initwp" depends="setting, waitfor" description="Install WordPress.">
+        <exec executable="${wpcli}" failonerror="true">
+            <arg value="--allow-root"/>
+            <arg value="core"/>
+            <arg value="install"/>
+            <arg value="--url=${env.URL}"/>
+            <arg value="--title=${env.TITLE}"/>
+            <arg value="--admin_user=${env.ADMIN_USER}"/>
+            <arg value="--admin_password=${env.ADMIN_PASSWORD}"/>
+            <arg value="--admin_email=${env.ADMIN_EMAIL}"/>
+            <arg value="--skip-email"/>
+        </exec>
+    </target>
+
+    <target name="generatesalts" depends="initwp" description="Generate salt keys.">
+        <exec executable="${wpcli}" failonerror="true">
+            <arg value="--allow-root"/>
+            <arg value="dotenv"/>
+            <arg value="salts"/>
+            <arg value="regenerate"/>
+        </exec>
+    </target>
+
+    <target name="new" depends="installvendors, setting, waitfor, initwp, generatesalts" description="Initial set up for local development.">
+        <echo message="Congratulations! Now you can access to the admin: ${env.URL}/wp/wp-admin/"/>
+    </target>
+</project>

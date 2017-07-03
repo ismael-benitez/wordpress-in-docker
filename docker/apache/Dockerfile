@@ -11,7 +11,9 @@ RUN set -ex; \
 	apt-get update; \
 	apt-get install -y \
 		git \
+		ant \
 		zip \
+		gettext-base \
 		libjpeg-dev \
 		libpng12-dev \
 	; \

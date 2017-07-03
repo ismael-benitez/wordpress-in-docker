@@ -26,31 +26,36 @@ This setup helps you get started with WordPress development with Docker as local
   `cd your-project-folder-name`
   `git pull git@github.com:ismael-benitez/wordpress-in-docker.git master`
 
-4. Copy the docker-compose.yml to the root:
+4. Copy the docker-compose.yml to the root and personalize the WordPress installation:
 
-  `cp docker/docker-compose.yml .`
+  ```bash
+  $ cp docker/docker-compose.yml .
+  $ vi docker-compose.yml
+        TITLE: My Blog
+        URL: http://localhost:8080
+        ADMIN_USER: user
+        ADMIN_PASSWORD: user
+        ADMIN_EMAIL: email@domain.com
+  ```
+If you choose a different URL instead of `localhost`, you ensure that your computer can to resolve 
+the hostname in the container, for example, editing `/etc/hosts` and adding the new hostname con IP `0.0.0.0`.
 
-5. Start the containers:
+If you change the default public port `8080` to another, you must to edit the URL with the new port. For example:
+
+```bash
+    ports:
+      - "8000:80"
+    environment:
+        URL: http://localhost:8000
+```
+
+5. Start your containerized local environment:
 
   `docker-compose up -d`
 
-6. Create your local environment variables:
+6. Add theme(s) in `web/app/themes` as you would for a normal WordPress site.
 
-  `cp .env.example .env`
-
-7. Install the dependencies:
-
-  `docker exec -it apache composer install`
-  
-8. Generate the security keys:
-
-  `docker exec -it apache vendor/bin/wp --allow-root dotenv salts regenerate`
-
-  Or, you can cut and paste from the [Roots WordPress Salt Generator](https://roots.io/salts.html).
-
-9. Add theme(s) in `web/app/themes` as you would for a normal WordPress site.
-
-10. Access WP admin at `http://localhost:8080/wp/wp-admin`
+7. Access WP admin at `http://localhost:8080/wp/wp-admin`
 
 ## Documentation
 

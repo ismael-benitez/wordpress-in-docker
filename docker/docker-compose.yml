@@ -19,15 +19,23 @@ services:
     container_name: apache
     volumes: 
       - .:/app/
+      - wordpress_uploads:/app/web/app/uploads
     depends_on:
       - db
     ports:
       - "8080:80"
+    environment:
+      TITLE: My Blog
+      URL: http://localhost:8080
+      ADMIN_USER: user
+      ADMIN_PASSWORD: user
+      ADMIN_EMAIL: email@domain.com
     networks:
       - wordpress
 
 volumes:
     mysql_data:
+    wordpress_uploads:
 
 networks:
     wordpress:
