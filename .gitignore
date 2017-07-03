@@ -19,3 +19,6 @@ web/.htaccess
 vendor/*
 !vendor/.gitkeep
 /docker-compose.yml
+
+# IDE
+.idea
