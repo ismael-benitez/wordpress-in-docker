@@ -5,8 +5,8 @@ web/app/mu-plugins/*/
 web/app/upgrade
 web/app/uploads/*
 !web/app/uploads/.gitkeep
-docker/mysql/data
-!docker/mysql/data/.gitkeep
+docker/dev/mysql/data
+!docker/dev/mysql/data/.gitkeep
 
 # WordPress
 web/wp
