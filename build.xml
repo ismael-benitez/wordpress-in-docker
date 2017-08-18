@@ -15,6 +15,19 @@
         </exec>
     </target>
 
+    <target name="installoptimizedvendors" description="Install optimized vendors.">
+        <exec executable="php">
+            <arg value="${composer}"/>
+            <arg value="install"/>
+            <arg value="--no-ansi" />
+            <arg value="--no-dev" />
+            <arg value="--no-interaction" />
+            <arg value="--no-progress" />
+            <arg value="--no-scripts" />
+            <arg value="--optimize-autoloader" />
+        </exec>
+    </target>
+
     <target name="setting" description="Setting WordPress.">
         <exec executable="envsubst">
             <redirector input=".env.example" output=".env"/>
@@ -54,5 +67,9 @@
 
     <target name="up" depends="installvendors, setting, waitfor, initwp, generatesalts" description="Initial set up for local development.">
         <echo message="Congratulations! Now you can access to the admin: ${env.URL}/wp/wp-admin/"/>
+    </target>
+
+    <target name="build" depends="installoptimizedvendors" description="Build and optimize a WP project.">
+        <echo message="Build complete."/>
     </target>
 </project>

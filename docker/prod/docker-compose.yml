@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:5.7
+    container_name: mysql
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+    restart: always
+    networks:
+      - wordpress
+
+  wordpress:
+    build:
+      context: ../../
+      dockerfile: docker/prod/apache/Dockerfile
+    container_name: apache
+    volumes:
+      - wordpress_plugins:/app/web/app/plugins
+      - wordpress_themes:/app/web/app/themes
+      - wordpress_uploads:/app/web/app/uploads
+    restart: always
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    networks:
+      - wordpress
+
+volumes:
+    mysql_data:
+    wordpress_plugins:
+    wordpress_themes:
+    wordpress_uploads:
+
+networks:
+    wordpress:
+      driver: overlay
+
