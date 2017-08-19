@@ -2,7 +2,7 @@ FROM php:7.0-apache
 
 ARG COMPOSER_VERSION=1.4.2
 
-COPY config/wordpress.conf /etc/apache2/sites-available/000-default.conf
+COPY wordpress.conf /etc/apache2/sites-available/000-default.conf
 
 
 # install the PHP extensions we need
