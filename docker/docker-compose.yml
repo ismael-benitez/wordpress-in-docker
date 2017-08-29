@@ -3,7 +3,6 @@ version: '3'
 services:
   db:
     image: mysql:5.7
-    container_name: mysql
     volumes:
       - mysql_data:/var/lib/mysql
       - ./docker/mysql/data:/docker-entrypoint-initdb.d
@@ -15,9 +14,9 @@ services:
     networks:
       - wordpress
 
+
   wordpress:
     build: docker/apache
-    container_name: apache
     volumes: 
       - .:/app/
       - wordpress_uploads:/app/web/app/uploads
