@@ -1,22 +1,26 @@
-version: '3'
+version: '3.3'
 
 services:
-  db:
+  mysql:
     image: mysql:5.7
-    container_name: mysql
     volumes:
       - mysql_data:/var/lib/mysql
     environment:
-      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/MYSQL_ROOT_PASSWORD
+      MYSQL_DATABASE_FILE: /run/secrets/MYSQL_DATABASE
+      MYSQL_USER_FILE: /run/secrets/MYSQL_USER
+      MYSQL_PASSWORD_FILE: /run/secrets/MYSQL_PASSWORD
+    secrets:
+      - MYSQL_ROOT_PASSWORD
+      - MYSQL_PASSWORD
+      - MYSQL_DATABASE
+      - MYSQL_USER
     restart: always
     networks:
       - wordpress
 
-  wordpress:
-    build:
-      context: ../../
-      dockerfile: docker/prod/apache/Dockerfile
-    container_name: apache
+  apache:
+    image: ibenitez/wordpress
     volumes:
       - wordpress_plugins:/app/web/app/plugins
       - wordpress_themes:/app/web/app/themes
@@ -24,8 +28,38 @@ services:
     restart: always
     ports:
       - "8080:80"
+    environment:
+      MYSQL_HOST_FILE: /run/secrets/MYSQL_HOST
+      MYSQL_NAME_FILE: /run/secrets/MYSQL_DATABASE
+      MYSQL_USER_FILE: /run/secrets/MYSQL_USER
+      MYSQL_PASSWORD_FILE: /run/secrets/MYSQL_PASSWORD
+      WP_HOME_FILE: /run/secrets/WP_HOME
+      WP_ENV_FILE: /run/secrets/WP_ENV
+      AUTH_KEY_FILE: /run/secrets/AUTH_KEY
+      SECURE_AUTH_KEY_FILE: /run/secrets/SECURE_AUTH_KEY
+      LOGGED_IN_KEY_FILE: /run/secrets/LOGGED_IN_KEY
+      NONCE_KEY_FILE: /run/secrets/NONCE_KEY
+      AUTH_SALT_FILE: /run/secrets/AUTH_SALT
+      SECURE_AUTH_SALT_FILE: /run/secrets/SECURE_AUTH_SALT
+      LOGGED_IN_SALT_FILE: /run/secrets/LOGGED_IN_SALT
+      NONCE_SALT_FILE: /run/secrets/NONCE_SALT
+    secrets:
+      - WP_HOME
+      - WP_ENV
+      - MYSQL_HOST
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+      - AUTH_KEY
+      - SECURE_AUTH_KEY
+      - LOGGED_IN_KEY
+      - NONCE_KEY
+      - AUTH_SALT
+      - SECURE_AUTH_SALT
+      - LOGGED_IN_SALT
+      - NONCE_SALT
     depends_on:
-      - db
+      - mysql
     networks:
       - wordpress
 
@@ -39,3 +73,34 @@ networks:
     wordpress:
       driver: overlay
 
+secrets:
+    MYSQL_HOST:
+      external: true
+    MYSQL_ROOT_PASSWORD:
+      external: true
+    MYSQL_DATABASE:
+      external: true
+    MYSQL_USER:
+      external: true
+    MYSQL_PASSWORD:
+      external: true
+    WP_HOME:
+      external: true
+    WP_ENV:
+      external: true
+    AUTH_KEY:
+      external: true
+    SECURE_AUTH_KEY:
+      external: true
+    LOGGED_IN_KEY:
+      external: true
+    NONCE_KEY:
+      external: true
+    AUTH_SALT:
+      external: true
+    SECURE_AUTH_SALT:
+      external: true
+    LOGGED_IN_SALT:
+      external: true
+    NONCE_SALT:
+      external: true

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="WID" default="install">
+    <property name="workspace" value="/app"/>
+    <property name="vendordir" value="${workspace}/vendor"/>
+    <property name="bindir" value="${vendordir}/bin"/>
+    <property name="wpcli" value="${bindir}/wp"/>
+    <property name="composer" value="/usr/bin/composer"/>
+    <property name="id" value="wordpress-in-docker"/>
+    <property name="url" value="http://0.0.0.0:8080"/>
+    <property environment="env" />
+
+    <target name="buildimages" description="Build prod images for WordPress.">
+        <exec dir="../../" executable="docker">
+            <arg value="build"/>
+            <arg value="-f"/>
+            <arg value="docker/prod/apache/Dockerfile"/>
+            <arg value="-t"/>
+            <arg value="ibenitez/wordpress"/>
+            <arg value="."/>
+        </exec>
+    </target>
+
+    <target name="setting" description="Generate config and secrets.">
+        <exec executable="./wp-setting.sh">
+            <arg value="-u" />
+            <arg value="${url}" />
+        </exec>
+    </target>
+
+    <target name="createstack" description="Create the new stack a Docker Swarm.">
+        <exec executable="docker">
+            <arg value="stack" />
+            <arg value="deploy" />
+            <arg value="--compose-file" />
+            <arg value="docker-compose.yml" />
+            <arg value="${id}" />
+        </exec>
+    </target>
+
+    <target name="build" depends="buildimages" description="Build a prod optimized WP image.">
+        <echo message="Build complete."/>
+    </target>
+
+    <target name="up" depends="setting,createstack" description="Create a new WordPress stack in Docker Swarm.">
+        <echo message="Stack for ${url} complete."/>
+    </target>
+</project>

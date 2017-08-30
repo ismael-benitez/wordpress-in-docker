@@ -6,7 +6,6 @@ ARG COMPOSER_VERSION=1.4.2
 
 COPY config ./config
 COPY web ./web
-COPY build.xml .
 COPY composer.json .
 COPY composer.lock .
 
@@ -22,7 +21,7 @@ RUN set -ex; \
 	\
 	curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer --version=${COMPOSER_VERSION}; \
 	\
-    ant build;
+    composer install --no-ansi --no-dev --no-interaction --no-progress --no-scripts --optimize-autoloader;
 
 
 FROM php:7.0-apache
@@ -44,7 +43,7 @@ RUN set -ex; \
 	\
 	docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
 	docker-php-ext-install gd mysqli opcache; \
-    sed -i -e 's/<Directory \/var\/www\/>/<Directory \/app\/>/g' /etc/apache2/apache2.conf
+    sed -i -e 's/<Directory \/var\/www\/>/<Directory \/app\/>/g' /etc/apache2/apache2.conf;
 
 
 # set recommended PHP.ini settings
@@ -74,6 +73,8 @@ COPY --from=builder /app/web/app/mu-plugins /app/web/app/mu-plugins
 COPY --from=builder /app/config /app/config
 COPY --from=builder /app/vendor /app/vendor
 COPY docker/prod/apache/htaccess /app/web/.htaccess
+COPY docker/prod/docker-entrypoint.sh /usr/local/bin/
 
 
+ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["apache2-foreground"]
